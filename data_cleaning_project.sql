@@ -2,7 +2,7 @@
 -- CSV:	data_cleaning_family.csv
 
 -- Step 1
--- Import data from csv into family_raw table
+-- CREATE DATABASE
 
 	CREATE DATABASE family;
     USE family;
@@ -20,13 +20,15 @@
 	death_place VARCHAR(200)
 	);
 
-	-- use MySQL Workbench data import wizard to import csv to family_raw
+-- STEP 2 IMPORT CSV FILE 
+-- data_cleaning_family.csv
+-- use MySQL Workbench data import wizard to import csv to family_raw
 	
     -- look at raw data
 	SELECT * FROM family_raw;
 
 
--- Step 2
+-- STEP 3 INSERT DATA INTO STAGING TABLE
 
 	-- Create copy of family_raw table
 	CREATE TABLE family_staging
@@ -36,7 +38,7 @@
 	INSERT family_staging
 	SELECT * FROM family_raw;
 
--- Step 3  FIND AND DELETE DUPLICATE RECORDS
+-- STEP 4  FIND AND DELETE DUPLICATE RECORDS
 
 WITH duplicate_cte AS
 (
@@ -79,9 +81,9 @@ FROM family_staging;
 DELETE FROM family_staging2
 WHERE row_num > 1;
 
--- STANDARDIZING DATA
+-- STEP 5 STANDARDIZE DATA
 
-	-- technique for trimming characters from the end
+	-- trim characters
 	-- here I'm getting rid of names ending in ", Jr" or ", Sr"
 
 SELECT name FROM family_staging2
@@ -96,7 +98,7 @@ WHERE name LIKE '%Fussey%';
 	-- STR_TO_DATE(column, format)
 	-- all very well when the string is in date format already but that's not the case here!
 
-   -- STORED FUNCTION 
+-- STEP 6 STORED FUNCTION 
 	-- year_extractor
     -- extracts year from string and casts as integer
 
@@ -118,7 +120,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- NULL & BLANK VALUES
+-- STEP 7 NULL & BLANK VALUES
 	-- populate if possible
     -- turn blanks into null
 
@@ -179,14 +181,14 @@ WHERE gender IS NULL;
 
 -- if you can populate from another row use self join to do it (N/A for this data)
 
--- REMOVE REDUNDANT COLUMNS AND ROWS
+-- STEP 8 REMOVE REDUNDANT COLUMNS AND ROWS
 
 -- remove the row_num column we used to remove duplicates
 ALTER TABLE family_staging2
 DROP COLUMN row_num;
 
 
--- CREATE NEW TABLE TO RECEIVE DATA FROM family_staging2
+-- STEP 9 CREATE NEW TABLE TO RECEIVE DATA FROM family_staging2
 	-- Need to extract birth and death years as integers and split first and last names
 
 CREATE TABLE family_cleaned
@@ -207,7 +209,7 @@ CREATE TABLE family_cleaned
     PRIMARY KEY (person_id)
 );
 
--- INSERT CLEANED DATA INTO family_cleaned TABLE
+-- STEP 10 INSERT CLEANED DATA INTO family_cleaned TABLE
 	-- see below for stored function which extracts year as integer from string
 
 INSERT INTO family_cleaned (num, id, lastname, firstname, birth_date, birth_year, birth_place, death_date, death_year, death_place, sex, relationship)
@@ -231,7 +233,7 @@ INSERT INTO family_cleaned (num, id, lastname, firstname, birth_date, birth_year
     
     SELECT * FROM family_cleaned ORDER BY num;
     
-    -- get rid of redundant id column (now we have person_id instead)
+    -- STEP 11 get rid of redundant id column (now we have person_id instead)
     ALTER TABLE family_cleaned
     DROP COLUMN id;
     
