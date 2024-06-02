@@ -1,13 +1,8 @@
 -- MYSQL DATA CLEANING PROJECT
 -- CSV:	data_cleaning_family.csv
 
-	-- 1. Remove duplicates
-    -- 2. Standardize the data
-    -- 3. Null or blank values
-    -- 4. Remove redundant columns
-
 -- Step 1
--- Import data from csv into person_raw table
+-- Import data from csv into family_raw table
 
 	CREATE DATABASE family;
     USE family;
@@ -25,7 +20,7 @@
 	death_place VARCHAR(200)
 	);
 
-	-- use MySQL Workbench data import wizard to import csv to person_raw
+	-- use MySQL Workbench data import wizard to import csv to family_raw
 	
     -- look at raw data
 	SELECT * FROM family_raw;
@@ -33,7 +28,7 @@
 
 -- Step 2
 
-	-- Create copy of person_raw table
+	-- Create copy of family_raw table
 	CREATE TABLE family_staging
 	LIKE family_raw;
 
@@ -73,9 +68,7 @@ CREATE TABLE `family_staging2` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-
-
--- insert recs into new table
+-- insert data into new table
 INSERT INTO family_staging2
 SELECT 
 *, 
