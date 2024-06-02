@@ -16,5 +16,5 @@
 <BR>10. Insert cleaned data
 <BR>  -- Extract lastname from name string
 <BR>  -- Extract firstname from name string
-<BR>  -- Extract birth and death years from birth_date and death_date string using stored function
+<BR>  -- Extract birth and death years from birth_date and death_date string as integers using stored function (year_extractor)
 <BR>11. Remove redundant id column
