@@ -210,7 +210,7 @@ CREATE TABLE family_cleaned
 );
 
 -- STEP 10 INSERT CLEANED DATA INTO family_cleaned TABLE
-	-- see below for stored function which extracts year as integer from string
+
 
 INSERT INTO family_cleaned (num, id, lastname, firstname, birth_date, birth_year, birth_place, death_date, death_year, death_place, sex, relationship)
 	SELECT
